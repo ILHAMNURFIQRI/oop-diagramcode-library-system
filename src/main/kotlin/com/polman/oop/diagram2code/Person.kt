@@ -29,7 +29,6 @@ abstract class Person(
     init {
         require(id.isNotBlank()) { "ID tidak boleh kosong" }
         validateName(name)
-        // Set nama awal dengan trim
         this.name = name.trim()
     }
 
@@ -37,12 +36,16 @@ abstract class Person(
      * Validasi nama:
      * - tidak kosong setelah trim
      * - panjang 2..100
-     * lempar IllegalArgumentException jika tidak valid.
+     * - hanya huruf dan spasi (tidak boleh ada angka/simbol)
+     * Lempar IllegalArgumentException jika tidak valid.
      */
     protected fun validateName(n: String) {
         val trimmedName = n.trim()
         require(trimmedName.isNotBlank()) { "Nama tidak boleh kosong" }
         require(trimmedName.length in 2..100) { "Panjang nama harus antara 2 hingga 100 karakter" }
+        require(trimmedName.matches(Regex("^[A-Za-z ]+$"))) {
+            "Nama mengandung karakter tidak valid (hanya huruf dan spasi diperbolehkan)"
+        }
     }
 
     /** Ringkasan identitas untuk audit/log. */

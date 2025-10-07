@@ -51,4 +51,34 @@ class PersonCreationTest {
         }
         assertTrue(ex.message!!.contains("id"))
     }
+    @Test
+    fun `fun gagal membuat Member dengan level null atau tidak dikenal`() {
+        assertThrows<IllegalArgumentException> {
+            // Simulasi level tidak valid (harus enum valid)
+            Member("M010", "Andi", MemberLevel.valueOf("INVALID"))
+        }
+    }
+
+    @Test
+    fun `fun calculateFee tidak boleh menghasilkan nilai negatif`() {
+        val m = Member("M009", "Citra", MemberLevel.REGULAR)
+        val fee = m.calculateFee(-5)
+        assertEquals(0.0, fee, 0.000001, "Fee harus nol jika hari keterlambatan negatif")
+    }
+
+    @Test
+    fun `fun Librarian tidak boleh dibuat dengan staffCode kosong atau spasi saja`() {
+        assertThrows<IllegalArgumentException> {
+            Librarian("L009", "Rina", "   ")
+        }
+    }
+
+    @Test
+    fun `fun Person name tidak boleh mengandung angka atau simbol aneh`() {
+        val ex = assertThrows<IllegalArgumentException> {
+            Member("M011", "Jo3#", MemberLevel.GOLD)
+        }
+        assertTrue(ex.message!!.contains("karakter"))
+    }
+
 }
